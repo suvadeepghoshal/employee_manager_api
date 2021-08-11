@@ -21,7 +21,7 @@ public class EmployeeService {
     }
 
     public Employee registerEmployee(Employee employee) throws EmployeeAlreadyExists {
-        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByEmail(employee.getEmployeeEmail());
+        Optional<Employee> optionalEmployee = employeeRepository.findEmployeeByEmployeeEmail(employee.getEmployeeEmail());
         if (optionalEmployee.isPresent()) {
             throw new EmployeeAlreadyExists("Employee with email: " + employee.getEmployeeEmail() + " already exists.");
         }
