@@ -34,11 +34,12 @@ public class EmployeeController {
     @PostMapping(path = "/register")
     public ResponseEntity<Employee> registerEmployee(@RequestBody Employee employee) throws EmployeeAlreadyExists {
         return new ResponseEntity<>(employeeService.registerEmployee(employee), HttpStatus.CREATED);
+
     }
 
-    @PutMapping(path = "/update")
-    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) {
-        return new ResponseEntity<>(employeeService.updateEmployeeDetails(employee), HttpStatus.OK);
+    @PutMapping(path = "/update/name/{employeeId}")
+    public ResponseEntity<Employee> updateEmployee(@PathVariable Long employeeId, @RequestParam(required = false) String employeeName) throws EmployeeNotFoundException {
+        return new ResponseEntity<>(employeeService.updateEmployeeName(employeeId, employeeName), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/delete/{employeeId}")

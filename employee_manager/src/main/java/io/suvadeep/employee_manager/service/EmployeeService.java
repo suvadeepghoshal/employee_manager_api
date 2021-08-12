@@ -7,7 +7,9 @@ import io.suvadeep.employee_manager.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,8 +35,13 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    public Employee updateEmployeeDetails(Employee employee) {
-        return employeeRepository.save(employee);
+    @Transactional
+    public Employee updateEmployeeName(Long employeeId, String employeeName) throws EmployeeNotFoundException {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("Employee with id: " + employeeId + " does not exists."));
+        if (employeeName != null && employeeName.length() > 0 && !Objects.equals(employee.getEmployeeName(), employeeName)) {
+            employee.setEmployeeName(employeeName);
+        }
+        return employee;
     }
 
     public Employee getEmployeeById(Long employeeId) throws EmployeeNotFoundException {
