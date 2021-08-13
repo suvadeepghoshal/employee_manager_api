@@ -15,10 +15,9 @@ import java.util.UUID;
 
 @Service
 public class EmployeeService {
-    private final EmployeeRepository employeeRepository;
-
     private static final String EMPLOYEE_ID = "Employee with id: ";
     private static final String DOES_NOT_EXISTS = " does not exists.";
+    private final EmployeeRepository employeeRepository;
 
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository) {
@@ -35,7 +34,9 @@ public class EmployeeService {
     }
 
     public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
+        List<Employee> employees = employeeRepository.findAll();
+        employees.sort((Employee e1, Employee e2) -> (int) (e1.getEmployeeId() - e2.getEmployeeId()));
+        return employees;
     }
 
     public Employee getEmployeeById(Long employeeId) throws EmployeeNotFoundException {
