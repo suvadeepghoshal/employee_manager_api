@@ -36,6 +36,6 @@ public class Employee implements Serializable {
     @Column(name = "picture_url", nullable = true, updatable = true, columnDefinition = "TEXT")
     private String employeeProfilePictureUrl;
 
-    @Column(name = "secret_code", nullable = false, updatable = false)
+    @Column(name = "secret_code", nullable = false, updatable = true)
     private String employeeRandomCode;
 }

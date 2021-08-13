@@ -17,6 +17,9 @@ import java.util.UUID;
 public class EmployeeService {
     private final EmployeeRepository employeeRepository;
 
+    private static final String EMPLOYEE_ID = "Employee with id: ";
+    private static final String DOES_NOT_EXISTS = " does not exists.";
+
     @Autowired
     public EmployeeService(EmployeeRepository employeeRepository) {
         this.employeeRepository = employeeRepository;
@@ -35,23 +38,45 @@ public class EmployeeService {
         return employeeRepository.findAll();
     }
 
-    @Transactional
-    public Employee updateEmployeeName(Long employeeId, String employeeName) throws EmployeeNotFoundException {
-        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("Employee with id: " + employeeId + " does not exists."));
-        if (employeeName != null && employeeName.length() > 0 && !Objects.equals(employee.getEmployeeName(), employeeName)) {
-            employee.setEmployeeName(employeeName);
-        }
-        return employee;
-    }
-
     public Employee getEmployeeById(Long employeeId) throws EmployeeNotFoundException {
-        return employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException("Employee with id: " + employeeId + " does not exists."));
+        return employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_ID + employeeId + DOES_NOT_EXISTS));
     }
 
     public void deleteEmployee(Long employeeId) throws EmployeeNotFoundException {
         if (!employeeRepository.existsById(employeeId)) {
-            throw new EmployeeNotFoundException("Employee with id: " + employeeId + " does not exists.");
+            throw new EmployeeNotFoundException(EMPLOYEE_ID + employeeId + DOES_NOT_EXISTS);
         }
         employeeRepository.deleteById(employeeId);
+    }
+
+    @Transactional
+    public Employee updateEmployee(Employee employee) throws EmployeeNotFoundException {
+        Employee updateEmployee = employeeRepository.findEmployeeByEmployeeEmail(employee.getEmployeeEmail()).orElseThrow(() -> new EmployeeNotFoundException("No employee with " + employee.getEmployeeEmail() + DOES_NOT_EXISTS));
+        /*To update name of the employee*/
+        if (employee.getEmployeeName() != null && employee.getEmployeeName().length() > 0 && !Objects.equals(employee.getEmployeeName(), updateEmployee.getEmployeeName())) {
+            updateEmployee.setEmployeeName(employee.getEmployeeName());
+        }
+        /*To update job title of the employee*/
+        if (employee.getEmployeeJobTitle() != null && employee.getEmployeeJobTitle().length() > 0 && !Objects.equals(employee.getEmployeeJobTitle(), updateEmployee.getEmployeeJobTitle())) {
+            updateEmployee.setEmployeeJobTitle(employee.getEmployeeJobTitle());
+        }
+        /*To update the phone number of the employee*/
+        if (employee.getEmployeePhoneNumber() != null && employee.getEmployeePhoneNumber().length() > 0 && !Objects.equals(employee.getEmployeePhoneNumber(), updateEmployee.getEmployeePhoneNumber())) {
+            updateEmployee.setEmployeePhoneNumber(employee.getEmployeePhoneNumber());
+        }
+        /*To update the profile picture of the employee*/
+        if (employee.getEmployeeProfilePictureUrl() != null && employee.getEmployeeProfilePictureUrl().length() > 0 && !Objects.equals(employee.getEmployeeProfilePictureUrl(), updateEmployee.getEmployeeProfilePictureUrl())) {
+            updateEmployee.setEmployeeProfilePictureUrl(employee.getEmployeeProfilePictureUrl());
+        }
+        return updateEmployee;
+    }
+
+    @Transactional
+    public Employee updateEmployeeEmail(Long employeeId, String employeeEmail) throws EmployeeNotFoundException {
+        Employee employee = employeeRepository.findById(employeeId).orElseThrow(() -> new EmployeeNotFoundException(EMPLOYEE_ID + employeeId + DOES_NOT_EXISTS));
+        if (employeeEmail != null && employeeEmail.length() > 0 && !Objects.equals(employee.getEmployeeEmail(), employeeEmail)) {
+            employee.setEmployeeEmail(employeeEmail);
+        }
+        return employee;
     }
 }

@@ -37,9 +37,14 @@ public class EmployeeController {
 
     }
 
-    @PutMapping(path = "/update/name/{employeeId}")
-    public ResponseEntity<Employee> updateEmployee(@PathVariable Long employeeId, @RequestParam(required = false) String employeeName) throws EmployeeNotFoundException {
-        return new ResponseEntity<>(employeeService.updateEmployeeName(employeeId, employeeName), HttpStatus.OK);
+    @PutMapping(path = "/update")
+    public ResponseEntity<Employee> updateEmployee(@RequestBody Employee employee) throws EmployeeNotFoundException {
+        return new ResponseEntity<>(employeeService.updateEmployee(employee), HttpStatus.OK);
+    }
+
+    @PutMapping(path = "/update/email/{employeeId}")
+    public ResponseEntity<Employee> updateEmployeeEmailAddress(@PathVariable Long employeeId, @RequestBody String employeeEmail) throws EmployeeNotFoundException {
+        return new ResponseEntity<>(employeeService.updateEmployeeEmail(employeeId, employeeEmail), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/delete/{employeeId}")
