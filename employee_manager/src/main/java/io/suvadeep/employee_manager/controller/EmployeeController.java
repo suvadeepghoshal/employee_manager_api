@@ -33,7 +33,11 @@ public class EmployeeController {
 
     @PostMapping(path = "/register")
     public ResponseEntity<Employee> registerEmployee(@RequestBody Employee employee) throws EmployeeAlreadyExists {
-        return new ResponseEntity<>(employeeService.registerEmployee(employee), HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(employeeService.registerEmployee(employee), HttpStatus.CREATED);
+        } catch (EmployeeAlreadyExists e) {
+            throw new IllegalStateException("Employee with email: " + employee.getEmployeeEmail() + " already exists.");
+        }
 
     }
 
